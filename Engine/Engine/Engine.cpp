@@ -1,15 +1,20 @@
 #include "Engine.h"
-
+#include "Device_WIN32.h"
 //Initialize statics
 Engine* Engine::s_pEngine = NULL;
 
 Engine::Engine()
-	:m_pGame(0)
+	:m_pDevice(0)
+	,m_pGame(0)
 {
+#ifdef WIN32
+	m_pDevice = new Device_WIN32(WINDOWWIDTH,WINDOWHEIGHT);
+#endif
 }
 
 Engine::~Engine()
 {
+	delete m_pDevice;
 	delete m_pGame;
 }
 
@@ -27,8 +32,9 @@ bool Engine::Run()
 	// If no game has been set, exit
 	if(m_pGame == NULL) return false;
 
-	//Initialize DirectX
-	if(!InitDisplay()) return false;
+	//Initialize the Graphics
+	//if(!InitDisplay()) return false;
+	if(!m_pDevice->InitDisplay()) return false;
 
 	/*if(!InitBuffer()) return false;
 
@@ -39,6 +45,7 @@ bool Engine::Run()
 
 	m_pGame->InitializeElements();
 
+#ifdef WIN32
 	// Enter the main message loop
 	MSG msg = {0};
 	while ( WM_QUIT != msg.message )
@@ -58,13 +65,8 @@ bool Engine::Run()
 
 	CleanUpDevice();
 	return msg.wParam?true:false;
+#endif
 }
-
-bool Engine::InitDisplay()
-{
-	return true;
-}
-
 
 void Engine::CleanUpDevice()
 {
@@ -76,93 +78,16 @@ void Engine::SetGame(AbstractGame* game)
 	m_pGame = game;
 }
 
-//void Engine::Update()
-//{
-//
-//}
-//
-//void Engine::Render()
-//{
-//
-//}
-
-void Engine::InitElements()
+Device* Engine::GetDevice()
 {
-
+	return m_pDevice;
 }
 
-ID3D11Device* Engine::GetD3DDevice()
-{
-	return 0;
-}
-
-ID3D11DeviceContext* Engine::GetImmediateContext()
-{
-	return 0;
-}
-
-ID3D11VertexShader* Engine::GetVertexShader()
-{
-	return 0;
-}
-
-ID3D11PixelShader* Engine::GetPixelShader()
-{
-	return 0;
-}
-
+#ifdef WIN32
 bool Engine::InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-	 // Register class
-	WNDCLASSEX wcex;
-	wcex.cbSize = sizeof( WNDCLASSEX );
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
-	wcex.cbClsExtra = NULL;
-	wcex.cbWndExtra = NULL;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = NULL;
-	wcex.hCursor = LoadCursor( NULL, IDC_ARROW );
-	wcex.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = L"Engine";
-	wcex.hIconSm = NULL;
-	if( !RegisterClassEx( &wcex ) )
-		return false;
-
-	// Create window 
-	RECT rc = { 0, 0, WINDOWWIDTH, WINDOWHEIGHT };
-	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
-	m_hMainWnd = CreateWindow(L"Engine", L"Night Engine", WS_OVERLAPPEDWINDOW,
-							CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-							NULL );
-	if( !m_hMainWnd )
-		return false;
-
-	ShowWindow( m_hMainWnd, nCmdShow );
-
-	return true;
+	assert(m_pDevice != NULL);
+	Device_WIN32* pDevice_Win32 = dynamic_cast<Device_WIN32*>(m_pDevice);
+	return pDevice_Win32->InitWindow(hInstance,nCmdShow);
 }
-
-LRESULT CALLBACK Engine::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-	{
-		PAINTSTRUCT ps;
-		HDC hdc;
-
-		switch( message )
-		{
-			case WM_PAINT:
-				hdc = BeginPaint( hWnd, &ps );
-				EndPaint( hWnd, &ps );
-				break;
-
-			case WM_DESTROY:
-				PostQuitMessage( 0 );
-				break;
-
-			default:
-				return DefWindowProc( hWnd, message, wParam, lParam );
-		}
-
-		return 0;
-	}
+#endif

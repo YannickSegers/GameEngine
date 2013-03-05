@@ -4,6 +4,7 @@
 //Includes
 #include "Util.h"
 #include "AbstractGame.h"
+#include "Device.h"
 
 // Magic numbers
 const int WINDOWWIDTH = 640;
@@ -30,32 +31,26 @@ public:
 	static Engine* GetSingleton();
 
 	bool Run();
-	bool InitDisplay();
+	//bool InitDisplay();
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+#ifdef WIN32
 	bool InitWindow(HINSTANCE hInstance, int nCmdShow);
+#endif
 	void CleanUpDevice();
 
 	void SetGame(AbstractGame* game);
+	Device* GetDevice();
 
-	ID3D11Device* GetD3DDevice();
-	ID3D11DeviceContext* GetImmediateContext();
-	ID3D11VertexShader* GetVertexShader();
-	ID3D11PixelShader* GetPixelShader();
 private:
 	//-----------------
 	//Member Methods
 	//-----------------
-	//void Update();
-	//void Render();
-	void InitElements();
 
 	//-----------------
 	//Member Variables
 	//-----------------
-	HWND m_hMainWnd;
-
 	AbstractGame* m_pGame;
+	Device* m_pDevice;
 
 };
 #endif

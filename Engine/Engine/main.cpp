@@ -8,6 +8,7 @@
 
 #define ENGINE (Engine::GetSingleton())
 
+#ifdef WIN32
 using namespace std;
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                LPSTR lpCmdLine, int nCmdShow)
@@ -32,3 +33,4 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return 0;
 	}
 }
+#endif

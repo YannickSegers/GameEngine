@@ -10,7 +10,7 @@ class Game: public AbstractGame
 {
 public:
 	Game();
-	~Game();
+	virtual ~Game();
 
 	virtual void InitializeElements();
 	virtual void Update();
