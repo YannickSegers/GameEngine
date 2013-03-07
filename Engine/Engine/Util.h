@@ -10,5 +10,5 @@
 	
 	// macro defines
 	#define D3DD11_SET_DEGUG_NAME(buffer, text) {buffer->SetPrivateData( WKPDID_D3DDebugObjectName, sizeof(text)-1, text);}
-	#define D3DD11_RELEASE_AND_CLEAN(a) {if(a) {a->Release();a=0;}}
+	#define D3DD11_RELEASE_AND_CLEAN(a) {if(a != 0) {a->Release();a=0;}}
 #endif

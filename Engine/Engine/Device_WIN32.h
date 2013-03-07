@@ -16,6 +16,8 @@ public:
 	bool InitWindow(HINSTANCE hInstance, int nCmdShow);
 
 	virtual bool InitDisplay();
+	virtual bool ResizeBuffers();
+	virtual void CleanUp();
 
 	ID3D11Device* GetD3DDevice();
 	ID3D11DeviceContext* GetImmediateContext();
@@ -23,5 +25,27 @@ public:
 	ID3D11PixelShader* GetPixelShader();
 private:
 	HWND m_hMainWnd;
+
+	ID3D11Device* m_pD3DDevice;
+	D3D_DRIVER_TYPE m_DriverType;
+	D3D_FEATURE_LEVEL m_FeatureLevel;
+	ID3D11DeviceContext* m_pImmediateContext;
+	IDXGISwapChain*  m_pSwapChain;
+
+	ID3D11Texture2D* m_pDepthStencilBuffer;
+	ID3D11RenderTargetView* m_pRenderTargetView;
+	ID3D11DepthStencilView* m_pDepthStencilView;
+
+	//ID3D11RasterizerState* m_pRasterizerState;
+
+	ID3D11Buffer* m_pCBNeverChanges;
+	ID3D11Buffer* m_pCBChangeOnResize;
+
+	ID3D11VertexShader* m_pVertexShader;
+	ID3D11PixelShader* m_pPixelShader;
+	ID3D11InputLayout* m_pVertexLayout;
+
+	int m_CurrentBackBufferWidth;
+	int m_CurrentBackBufferHeight;
 };
 #endif

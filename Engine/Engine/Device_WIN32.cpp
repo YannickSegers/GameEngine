@@ -3,40 +3,196 @@
 
 Device_WIN32::Device_WIN32(int width, int height)
 	:Device(width,height)
+	,m_CurrentBackBufferWidth(0)
+	,m_CurrentBackBufferHeight(0)
 {
 
 }
 
 Device_WIN32::~Device_WIN32()
 {
-
+	//CleanUp();
 }
 
+//Initializes the Device, Swapchain and immediateContext
 bool Device_WIN32::InitDisplay()
 {
-	return true;
+	HRESULT hr = S_OK;
+
+	RECT rc;
+	GetClientRect( m_hMainWnd, &rc );
+	m_Width = rc.right - rc.left;
+	m_Height = rc.bottom - rc.top;
+
+	UINT createDeviceFlags = 0;
+#ifdef _DEBUG
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+	// Multiple driver types so we can later select the one that works
+	// the list is prioritized, so it checks the most important one first
+	D3D_DRIVER_TYPE driverTypes[] =
+	{
+		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_WARP,
+		D3D_DRIVER_TYPE_REFERENCE,
+	};
+	UINT numDriverTypes = ARRAYSIZE( driverTypes );
+
+	D3D_FEATURE_LEVEL featureLevels[] =
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+	};
+	UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+
+	DXGI_SWAP_CHAIN_DESC sd;
+    ZeroMemory( &sd, sizeof( sd ) );
+    sd.BufferCount = 1;
+    sd.BufferDesc.Width = m_Width;
+    sd.BufferDesc.Height = m_Height;
+    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    sd.BufferDesc.RefreshRate.Numerator = REFRESHRATE;
+    sd.BufferDesc.RefreshRate.Denominator = 1;
+    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    sd.OutputWindow = m_hMainWnd;
+    sd.SampleDesc.Count = 1; //Used for anti-aliasing
+    sd.SampleDesc.Quality = 0; //Used for anti-aliasing
+    sd.Windowed = TRUE;
+
+	//Create the device and swapchain on the drivertype that works
+    for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
+    {
+        m_DriverType = driverTypes[driverTypeIndex];
+		hr = D3D11CreateDeviceAndSwapChain( NULL, m_DriverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
+                                            D3D11_SDK_VERSION, &sd, &m_pSwapChain, &m_pD3DDevice, &m_FeatureLevel, &m_pImmediateContext );
+		// Put here for debugging reasons
+		D3DD11_SET_DEGUG_NAME(m_pSwapChain,"m_pSwapChain");
+		D3DD11_SET_DEGUG_NAME(m_pD3DDevice,"m_pD3DDevice");
+		D3DD11_SET_DEGUG_NAME(m_pImmediateContext,"m_pImmediateContext");
+
+        if( SUCCEEDED( hr ) )
+            break;
+    }
+
+	//Rest of the initialization is the same as the resize code
+	hr = ResizeBuffers();
+
+	// if anything failed, it will return false, otherwise true
+	return SUCCEEDED(hr);
+}
+
+// Initializes the RenderTargetView and the Depth/Stencil buffer and view
+// Also binds the RenderTargetView and Depth/Stencil view to the pipeline
+// This method should also be called when the size of the window changes, as these views
+// need to adapt to the new resolution
+bool Device_WIN32::ResizeBuffers()
+{
+	HRESULT hr = S_OK;
+
+	//Only perform this code when the size has changed
+	if((m_CurrentBackBufferWidth != m_Width) || (m_CurrentBackBufferHeight != m_Height))
+	{
+		//////////////////////////////
+		//Creating the RenderTargetView
+		//////////////////////////////
+
+		//Retrieve the backbuffer
+		ID3D11Texture2D* pBackBuffer = NULL;
+		hr = m_pSwapChain->GetBuffer( 0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+		D3DD11_SET_DEGUG_NAME(pBackBuffer,"pBackBuffer");
+		if(FAILED(hr)) return false;
+	
+
+		//Create the RenderTargetView
+		hr = m_pD3DDevice->CreateRenderTargetView( pBackBuffer, 0, &m_pRenderTargetView);
+		D3DD11_SET_DEGUG_NAME(m_pRenderTargetView,"m_pRenderTargetView");
+		pBackBuffer->Release();
+		if(FAILED(hr)) return false;
+
+		//////////////////////////////
+		//Creating the Depth/Stencil buffer and view
+		//////////////////////////////
+
+		//Create the DepthStencilBuffer
+		D3D11_TEXTURE2D_DESC depthStencilDesc;
+		depthStencilDesc.Width = m_Width;
+		depthStencilDesc.Height = m_Height;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
+
+		hr = m_pD3DDevice->CreateTexture2D(&depthStencilDesc,0, &m_pDepthStencilBuffer);
+		D3DD11_SET_DEGUG_NAME(m_pDepthStencilBuffer,"m_pDepthStencilBuffer");
+		if(FAILED(hr)) return false;
+
+		//Create the DepthStencilView
+		hr = m_pD3DDevice->CreateDepthStencilView(m_pDepthStencilBuffer,0,&m_pDepthStencilView);
+		D3DD11_SET_DEGUG_NAME(m_pDepthStencilView,"m_pDepthStencilView");
+		if(FAILED(hr)) return false;
+
+		// Bind the render target view and depth/stencil view to the pipeline.
+		m_pImmediateContext->OMSetRenderTargets( 1, &m_pRenderTargetView, m_pDepthStencilView);
+
+		// Setup the viewport
+		D3D11_VIEWPORT vp;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		vp.Width    = (float)m_Width;
+		vp.Height   = (float)m_Height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+
+		m_pImmediateContext->RSSetViewports(1, &vp);
+		m_pImmediateContext->RSSetState(0); // Would it be better to fill in a rasterizerState?
+	}
+	return SUCCEEDED(hr);
+}
+
+void Device_WIN32::CleanUp()
+{
+	/*D3DD11_RELEASE_AND_CLEAN(m_pVertexLayout);
+	D3DD11_RELEASE_AND_CLEAN(m_pPixelShader);
+	D3DD11_RELEASE_AND_CLEAN(m_pVertexShader);
+	D3DD11_RELEASE_AND_CLEAN(m_pCBNeverChanges);
+	D3DD11_RELEASE_AND_CLEAN(m_pCBChangeOnResize);*/
+	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilBuffer);
+	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilView);
+	D3DD11_RELEASE_AND_CLEAN(m_pRenderTargetView);
+	//D3DD11_RELEASE_AND_CLEAN(m_pRasterizerState);
+	D3DD11_RELEASE_AND_CLEAN(m_pSwapChain);
+	D3DD11_RELEASE_AND_CLEAN(m_pImmediateContext);
+	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
 }
 
 ID3D11Device* Device_WIN32::GetD3DDevice()
 {
-	return 0;
+	return m_pD3DDevice;
 }
 
 ID3D11DeviceContext* Device_WIN32::GetImmediateContext()
 {
-	return 0;
+	return m_pImmediateContext;
 }
 
 ID3D11VertexShader* Device_WIN32::GetVertexShader()
 {
-	return 0;
+	return m_pVertexShader;
 }
 
 ID3D11PixelShader* Device_WIN32::GetPixelShader()
 {
-	return 0;
+	return m_pPixelShader;
 }
 
+//Creates the window on a Windows system
 bool Device_WIN32::InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
 	 // Register class

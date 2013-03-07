@@ -1,6 +1,9 @@
 #ifndef __Device_H_
 #define __Device_H_
 
+//Magic Numbers
+const int REFRESHRATE = 60;
+
 class Device
 {
 public: 
@@ -11,6 +14,7 @@ public:
 
 	void SetWidth(int width);
 	void SetHeight(int height);
+	virtual void CleanUp() = 0;
 
 protected:
 	int m_Width;

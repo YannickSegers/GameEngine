@@ -33,10 +33,9 @@ bool Engine::Run()
 	if(m_pGame == NULL) return false;
 
 	//Initialize the Graphics
-	//if(!InitDisplay()) return false;
 	if(!m_pDevice->InitDisplay()) return false;
 
-	/*if(!InitBuffer()) return false;
+	/*if(!InitBuffer()) return false; is the same as the onResize method of the finalproject
 
 	if(!InitShader()) return false;
 
@@ -70,6 +69,7 @@ bool Engine::Run()
 
 void Engine::CleanUpDevice()
 {
+	m_pDevice->CleanUp();
 	delete this;
 }
 
