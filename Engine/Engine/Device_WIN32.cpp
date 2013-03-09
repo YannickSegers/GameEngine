@@ -172,7 +172,7 @@ void Device_WIN32::CleanUp()
 	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
 }
 
-ID3D11Device* Device_WIN32::GetD3DDevice()
+ID3D11Device* Device_WIN32::Get3DDevice()
 {
 	return m_pD3DDevice;
 }
@@ -190,6 +190,16 @@ ID3D11VertexShader* Device_WIN32::GetVertexShader()
 ID3D11PixelShader* Device_WIN32::GetPixelShader()
 {
 	return m_pPixelShader;
+}
+
+void Device_WIN32::ClearRenderTargetView(const float* clearColor)
+{
+	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView,clearColor);
+}
+
+void Device_WIN32::PresentSwapChain()
+{
+	m_pSwapChain->Present(0,0);
 }
 
 //Creates the window on a Windows system

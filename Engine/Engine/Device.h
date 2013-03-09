@@ -16,6 +16,8 @@ public:
 	void SetHeight(int height);
 	virtual void CleanUp() = 0;
 
+	virtual void ClearRenderTargetView(const float* clearColor) = 0;
+	virtual void PresentSwapChain() = 0;
 protected:
 	int m_Width;
 	int m_Height;

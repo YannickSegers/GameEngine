@@ -19,10 +19,13 @@ public:
 	virtual bool ResizeBuffers();
 	virtual void CleanUp();
 
-	ID3D11Device* GetD3DDevice();
+	ID3D11Device* Get3DDevice();
 	ID3D11DeviceContext* GetImmediateContext();
 	ID3D11VertexShader* GetVertexShader();
 	ID3D11PixelShader* GetPixelShader();
+
+	virtual void ClearRenderTargetView(const float* clearColor);
+	virtual void PresentSwapChain();
 private:
 	HWND m_hMainWnd;
 
