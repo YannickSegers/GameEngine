@@ -33,7 +33,10 @@
     <ClCompile Include="Device.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Device_WIN32.cpp">
+    <ClCompile Include="Device_D3D.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +56,10 @@
     <ClInclude Include="Device.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="Device_WIN32.h">
+    <ClInclude Include="Device_D3D.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>

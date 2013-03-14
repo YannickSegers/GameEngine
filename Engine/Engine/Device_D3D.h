@@ -1,16 +1,16 @@
-#ifndef __Device_WIN32_H_
-#define __Device_WIN32_H_
+#ifndef __Device_D3D_H_
+#define __Device_D3D_H_
 
 //Includes
 #include "Device.h"
 #include "Util.h"
 
 //The Win32 device which will create the window and manage the DirectX components
-class Device_WIN32: public Device
+class Device_D3D: public Device
 {
 public:
-	Device_WIN32(int width, int height);
-	virtual ~Device_WIN32();
+	Device_D3D(int width, int height);
+	virtual ~Device_D3D();
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	bool InitWindow(HINSTANCE hInstance, int nCmdShow);

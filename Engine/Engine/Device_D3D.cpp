@@ -1,7 +1,7 @@
-#include "Device_WIN32.h"
+#include "Device_D3D.h"
 
 
-Device_WIN32::Device_WIN32(int width, int height)
+Device_D3D::Device_D3D(int width, int height)
 	:Device(width,height)
 	,m_CurrentBackBufferWidth(0)
 	,m_CurrentBackBufferHeight(0)
@@ -9,13 +9,13 @@ Device_WIN32::Device_WIN32(int width, int height)
 
 }
 
-Device_WIN32::~Device_WIN32()
+Device_D3D::~Device_D3D()
 {
 	//CleanUp();
 }
 
 //Initializes the Device, Swapchain and immediateContext
-bool Device_WIN32::InitDisplay()
+bool Device_D3D::InitDisplay()
 {
 	HRESULT hr = S_OK;
 
@@ -87,7 +87,7 @@ bool Device_WIN32::InitDisplay()
 // Also binds the RenderTargetView and Depth/Stencil view to the pipeline
 // This method should also be called when the size of the window changes, as these views
 // need to adapt to the new resolution
-bool Device_WIN32::ResizeBuffers()
+bool Device_D3D::ResizeBuffers()
 {
 	HRESULT hr = S_OK;
 
@@ -156,8 +156,9 @@ bool Device_WIN32::ResizeBuffers()
 	return SUCCEEDED(hr);
 }
 
-void Device_WIN32::CleanUp()
+void Device_D3D::CleanUp()
 {
+	m_pSwapChain->SetFullscreenState(FALSE, NULL);
 	/*D3DD11_RELEASE_AND_CLEAN(m_pVertexLayout);
 	D3DD11_RELEASE_AND_CLEAN(m_pPixelShader);
 	D3DD11_RELEASE_AND_CLEAN(m_pVertexShader);
@@ -172,38 +173,38 @@ void Device_WIN32::CleanUp()
 	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
 }
 
-ID3D11Device* Device_WIN32::Get3DDevice()
+ID3D11Device* Device_D3D::Get3DDevice()
 {
 	return m_pD3DDevice;
 }
 
-ID3D11DeviceContext* Device_WIN32::GetImmediateContext()
+ID3D11DeviceContext* Device_D3D::GetImmediateContext()
 {
 	return m_pImmediateContext;
 }
 
-ID3D11VertexShader* Device_WIN32::GetVertexShader()
+ID3D11VertexShader* Device_D3D::GetVertexShader()
 {
 	return m_pVertexShader;
 }
 
-ID3D11PixelShader* Device_WIN32::GetPixelShader()
+ID3D11PixelShader* Device_D3D::GetPixelShader()
 {
 	return m_pPixelShader;
 }
 
-void Device_WIN32::ClearRenderTargetView(const float* clearColor)
+void Device_D3D::ClearRenderTargetView(const float* clearColor)
 {
 	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView,clearColor);
 }
 
-void Device_WIN32::PresentSwapChain()
+void Device_D3D::PresentSwapChain()
 {
 	m_pSwapChain->Present(0,0);
 }
 
 //Creates the window on a Windows system
-bool Device_WIN32::InitWindow(HINSTANCE hInstance, int nCmdShow)
+bool Device_D3D::InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
 	 // Register class
 	WNDCLASSEX wcex;
@@ -237,7 +238,7 @@ bool Device_WIN32::InitWindow(HINSTANCE hInstance, int nCmdShow)
 	return true;
 }
 
-LRESULT CALLBACK Device_WIN32::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK Device_D3D::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 	{
 		PAINTSTRUCT ps;
 		HDC hdc;

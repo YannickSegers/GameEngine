@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "Device_WIN32.h"
+#include "Device_D3D.h"
 //Initialize statics
 Engine* Engine::s_pEngine = NULL;
 
@@ -8,7 +8,7 @@ Engine::Engine()
 	,m_pGame(0)
 {
 #ifdef WIN32
-	m_pDevice = new Device_WIN32(WINDOWWIDTH,WINDOWHEIGHT);
+	m_pDevice = new Device_D3D(WINDOWWIDTH,WINDOWHEIGHT);
 #endif
 }
 
@@ -87,7 +87,7 @@ Device* Engine::GetDevice()
 bool Engine::InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
 	assert(m_pDevice != NULL);
-	Device_WIN32* pDevice_Win32 = dynamic_cast<Device_WIN32*>(m_pDevice);
-	return pDevice_Win32->InitWindow(hInstance,nCmdShow);
+	Device_D3D* pDevice_D3D = dynamic_cast<Device_D3D*>(m_pDevice);
+	return pDevice_D3D->InitWindow(hInstance,nCmdShow);
 }
 #endif
