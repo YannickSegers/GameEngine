@@ -3,6 +3,7 @@
 #include <crtdbg.h>
 #endif
 
+#include <tchar.h>
 #include "Engine.h"
 #include "Game.h"
 
@@ -10,6 +11,14 @@
 
 #ifdef WIN32
 using namespace std;
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	UNREFERENCED_PARAMETER( argc );
+	UNREFERENCED_PARAMETER( argv );
+	WinMain(GetModuleHandle(0),0,0,SW_SHOW);
+}
+
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                LPSTR lpCmdLine, int nCmdShow)
 {
