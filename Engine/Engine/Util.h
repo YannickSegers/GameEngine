@@ -10,6 +10,7 @@ using namespace std;
 	#include <d3dcompiler.h>
 	#include <xnamath.h>
 	#include <cassert>
+	#include <string>
 
 #ifdef _UNICODE
 	#define tstring wstring
@@ -49,5 +50,6 @@ using namespace std;
 	
 	// macro defines
 	#define D3DD11_SET_DEGUG_NAME(buffer, text) {buffer->SetPrivateData( WKPDID_D3DDebugObjectName, sizeof(text)-1, text);}
-	#define D3DD11_RELEASE_AND_CLEAN(a) {if(a != 0) {a->Release();a=0;}}
+	#define D3DD11_RELEASE_AND_CLEAN(p) {if(p != 0) {p->Release();p=0;}}
+	#define D3DD11_DELETE_AND_CLEAN(p) {if(p != 0) {delete (p);p=0;}}
 #endif
