@@ -3,7 +3,7 @@
 
 //Includes
 #include "Device.h"
-#include "Util.h"
+//#include "Util.h"
 
 //The Win32 device which will create the window and manage the DirectX components
 class Device_D3D: public Device
@@ -19,7 +19,7 @@ public:
 	virtual bool ResizeBuffers();
 	virtual void CleanUp();
 
-	ID3D11Device* Get3DDevice();
+	virtual Pi3DDevice* Get3DDevice();
 	ID3D11DeviceContext* GetImmediateContext();
 	ID3D11VertexShader* GetVertexShader();
 	ID3D11PixelShader* GetPixelShader();

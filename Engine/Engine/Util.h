@@ -52,4 +52,16 @@ using namespace std;
 	#define D3DD11_SET_DEGUG_NAME(buffer, text) {buffer->SetPrivateData( WKPDID_D3DDebugObjectName, sizeof(text)-1, text);}
 	#define D3DD11_RELEASE_AND_CLEAN(p) {if(p != 0) {p->Release();p=0;}}
 	#define D3DD11_DELETE_AND_CLEAN(p) {if(p != 0) {delete (p);p=0;}}
+
+	//ENGINE define
+	#define ENGINE (Engine::GetSingleton())
+
+	/* 
+	*Platform independent typedefs so platform specific code is hidden as much as possible
+	*/
+#ifdef WIN32
+	typedef unsigned int PiUInt32;
+	typedef unsigned __int64 PiUInt64;
+	typedef ID3D11Device Pi3DDevice;
+#endif
 #endif

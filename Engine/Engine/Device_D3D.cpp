@@ -173,7 +173,7 @@ void Device_D3D::CleanUp()
 	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
 }
 
-ID3D11Device* Device_D3D::Get3DDevice()
+Pi3DDevice* Device_D3D::Get3DDevice()
 {
 	return m_pD3DDevice;
 }

@@ -1,6 +1,9 @@
 #ifndef __Device_H_
 #define __Device_H_
 
+#include "Util.h"
+
+//typedef ID3D11Device Pi3DDevice;
 //Magic Numbers
 const int REFRESHRATE = 60;
 
@@ -18,6 +21,8 @@ public:
 
 	virtual void ClearRenderTargetView(const float* clearColor) = 0;
 	virtual void PresentSwapChain() = 0;
+
+	virtual Pi3DDevice* Get3DDevice() = 0;
 protected:
 	int m_Width;
 	int m_Height;

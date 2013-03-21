@@ -17,6 +17,7 @@ public:
 	virtual ~ShaderManager();
 
 	bool CompileShaderFromFile(const tstring& fileName, LPCSTR shaderName, LPCSTR shaderModel, ID3D10Blob** ppBlobOut);
+	bool GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderBlob, ID3D11InputLayout** pInputLayout);
 
 	void AddVertexShader(const tstring& vShaderName, ID3D11VertexShader* vertexShader);
 	void AddPixelShader(const tstring& pShaderName, ID3D11PixelShader* pixelShader);
@@ -26,15 +27,16 @@ public:
 	ID3D11PixelShader* GetPixelShader(const tstring& pShaderName);
 	ID3D11GeometryShader* GetGeometryShader(const tstring& gShaderName);
 
-	bool isVertexShaderPresent(const tstring& vShaderName);
-	bool isPixelShaderPresent(const tstring& pShaderName);
-	bool isGeometryShaderPresent(const tstring& gShaderName);
+	bool IsVertexShaderPresent(const tstring& vShaderName);
+	bool IsPixelShaderPresent(const tstring& pShaderName);
+	bool IsGeometryShaderPresent(const tstring& gShaderName);
 
 	void RemoveAllVertexShaders();
 	void RemoveAllPixelShaders();
 	void RemoveAllGeometryShaders();
 
 protected:
+	map<tstring,ID3D11InputLayout*> m_InputLayouts;
 	map<tstring,ID3D11VertexShader*> m_VertexShaders;
 	map<tstring,ID3D11PixelShader*> m_PixelShaders;
 	map<tstring,ID3D11GeometryShader*> m_GeometryShaders;

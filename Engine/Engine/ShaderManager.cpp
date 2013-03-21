@@ -1,5 +1,7 @@
 #include "ShaderManager.h"
 #include <boost/foreach.hpp>
+#include <vector>
+#include "Engine.h"
 
 ShaderManager::ShaderManager()
 {
@@ -41,6 +43,90 @@ bool ShaderManager::CompileShaderFromFile(const tstring& fileName, LPCSTR shader
 	return SUCCEEDED(hr);
 }
 
+bool ShaderManager::GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderBlob, ID3D11InputLayout** pInputLayout)
+{
+	HRESULT hr = S_OK;
+
+	// Reflect shader info to retreive the metadata of the shader
+    ID3D11ShaderReflection* pVertexShaderReflection = NULL; 
+	hr = D3DReflect( pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**) &pVertexShaderReflection );
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+	//Retreives the shader info from the shader
+	D3D11_SHADER_DESC vertexShaderDesc;
+	hr = pVertexShaderReflection->GetDesc(&vertexShaderDesc);
+	if (FAILED(hr))
+    {
+        return false;
+    }
+
+	// Read input layout description from shader info
+    UINT byteOffset = 0;
+    vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+	for ( UINT i=0; i< vertexShaderDesc.InputParameters; i++ )
+    {
+        D3D11_SIGNATURE_PARAMETER_DESC paramDesc;       
+        pVertexShaderReflection->GetInputParameterDesc(i, &paramDesc );
+ 
+        // fill out input element desc
+        D3D11_INPUT_ELEMENT_DESC elementDesc;   
+        elementDesc.SemanticName = paramDesc.SemanticName;      
+        elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+        elementDesc.InputSlot = 0;
+        elementDesc.AlignedByteOffset = byteOffset;
+        elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        elementDesc.InstanceDataStepRate = 0;   
+ 
+        /* determine DXGI format
+		 * The Mask in the D3D11_SIGNATURE_PARAMETER_DESC determines how many components there are in the used type.
+		 * So we have to check the bits of the mask (0001 = 1, 0011, = 2, 0111 = 3, 1111 = 4)
+		 * The ComponentType tells us which actual type is used.
+		*/
+        if ( paramDesc.Mask == 1 ) //Only one Component, so _R32_ in the format
+        {
+            if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32_UINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32_SINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+            byteOffset += 4;
+        }
+        else if ( paramDesc.Mask <= 3 ) //Two Components, so _R32G32_ in the format
+        {
+            if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+            byteOffset += 8;
+        }
+        else if ( paramDesc.Mask <= 7 )//Three Components, so _R32G32B32_ in the format
+        {
+            if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            byteOffset += 12;
+        }
+        else if ( paramDesc.Mask <= 15 )//Four Components, so _R32G32B32A32_ in the format
+        {
+            if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+            else if ( paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32 ) elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+            byteOffset += 16;
+        }
+             
+        //save element desc
+        inputLayoutDesc.push_back(elementDesc);
+    }       
+ 
+	//ENGINE->GetDevice()->g;
+    // Try to create Input Layout
+	hr = ENGINE->GetDevice()->Get3DDevice()->CreateInputLayout( &inputLayoutDesc[0], inputLayoutDesc.size(), pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), pInputLayout );
+ 
+    //Free allocation shader reflection memory
+    pVertexShaderReflection->Release();
+	return SUCCEEDED(hr);
+}
+
 void ShaderManager::AddVertexShader(const tstring& vShaderName, ID3D11VertexShader* vertexShader)
 {
 	m_VertexShaders[vShaderName] = vertexShader;
@@ -71,19 +157,19 @@ ID3D11GeometryShader* ShaderManager::GetGeometryShader(const tstring& gShaderNam
 	return m_GeometryShaders[gShaderName];
 }
 
-bool ShaderManager::isVertexShaderPresent(const tstring& vShaderName)
+bool ShaderManager::IsVertexShaderPresent(const tstring& vShaderName)
 {
 	map<tstring,ID3D11VertexShader*>::iterator pos = m_VertexShaders.find(vShaderName);
 	return (pos != m_VertexShaders.end());
 }
 
-bool ShaderManager::isPixelShaderPresent(const tstring& pShaderName)
+bool ShaderManager::IsPixelShaderPresent(const tstring& pShaderName)
 {
 	map<tstring,ID3D11PixelShader*>::iterator pos = m_PixelShaders.find(pShaderName);
 	return (pos != m_PixelShaders.end());
 }
 
-bool ShaderManager::isGeometryShaderPresent(const tstring& gShaderName)
+bool ShaderManager::IsGeometryShaderPresent(const tstring& gShaderName)
 {
 	map<tstring,ID3D11GeometryShader*>::iterator pos = m_GeometryShaders.find(gShaderName);
 	return (pos != m_GeometryShaders.end());
