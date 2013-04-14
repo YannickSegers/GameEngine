@@ -10,6 +10,7 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
+	RemoveAllInputLayouts();
 	RemoveAllVertexShaders();
 	RemoveAllPixelShaders();
 	RemoveAllGeometryShaders();
@@ -126,6 +127,49 @@ bool ShaderManager::GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderB
     pVertexShaderReflection->Release();
 	return SUCCEEDED(hr);
 }
+/*
+bool ShaderManager::GenerateConstantBufferFromShader(ID3DBlob* pVertexShaderBlob)
+{
+	HRESULT hr = S_OK;
+
+	// Reflect shader info to retreive the metadata of the shader
+    ID3D11ShaderReflection* pVertexShaderReflection = NULL; 
+	hr = D3DReflect( pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**) &pVertexShaderReflection );
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+	//Retreives the shader info from the shader
+	D3D11_SHADER_DESC vertexShaderDesc;
+	hr = pVertexShaderReflection->GetDesc(&vertexShaderDesc);
+	if (FAILED(hr))
+    {
+        return false;
+    }
+
+	// Read constant buffer description from shader info
+    UINT byteOffset = 0;
+    vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
+	for ( UINT i=0; i< vertexShaderDesc.ConstantBuffers; i++ )
+    {
+        ID3D11ShaderReflectionConstantBuffer* constantBuffer = pVertexShaderReflection->GetConstantBufferByIndex(i);
+		
+		D3D11_SHADER_BUFFER_DESC bufferDesc;
+		constantBuffer->GetDesc(&bufferDesc);
+		//
+		for ( UINT i=0; i< bufferDesc.Variables; i++ )
+		{
+			ID3D11ShaderReflectionVariable* shaderVariable = constantBuffer->GetVariableByIndex(i);
+		}
+
+	}
+}
+*/
+void ShaderManager::AddInputLayout(const tstring& inputLayoutName, ID3D11InputLayout* inputLayout)
+{
+	m_InputLayouts[inputLayoutName] = inputLayout;
+}
 
 void ShaderManager::AddVertexShader(const tstring& vShaderName, ID3D11VertexShader* vertexShader)
 {
@@ -140,6 +184,11 @@ void ShaderManager::AddPixelShader(const tstring& pShaderName, ID3D11PixelShader
 void ShaderManager::AddGeometryShader(const tstring& gShaderName, ID3D11GeometryShader* geometryShader)
 {
 	m_GeometryShaders[gShaderName] = geometryShader;
+}
+
+ID3D11InputLayout* ShaderManager::GetInputLayout(const tstring& inputLayoutName)
+{
+	return m_InputLayouts[inputLayoutName];
 }
 
 ID3D11VertexShader* ShaderManager::GetVertexShader(const tstring& vShaderName)
@@ -173,6 +222,14 @@ bool ShaderManager::IsGeometryShaderPresent(const tstring& gShaderName)
 {
 	map<tstring,ID3D11GeometryShader*>::iterator pos = m_GeometryShaders.find(gShaderName);
 	return (pos != m_GeometryShaders.end());
+}
+
+void ShaderManager::RemoveAllInputLayouts()
+{
+	BOOST_FOREACH(StringInputLayoutPair &inputLayoutPair, m_InputLayouts)
+	{
+		D3DD11_RELEASE_AND_CLEAN(inputLayoutPair.second);
+	}
 }
 
 //Removes all the vertex shaders

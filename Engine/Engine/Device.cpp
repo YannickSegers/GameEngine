@@ -16,3 +16,13 @@ void Device::SetHeight(int height)
 {
 	m_Height = height;
 }
+
+int Device::GetWidth()
+{
+	return m_Width;
+}
+
+int Device::GetHeight()
+{
+	return m_Height;
+}

@@ -151,7 +151,32 @@ bool Device_D3D::ResizeBuffers()
 		vp.MaxDepth = 1.0f;
 
 		m_pImmediateContext->RSSetViewports(1, &vp);
-		m_pImmediateContext->RSSetState(0); // Would it be better to fill in a rasterizerState?
+		//m_pImmediateContext->RSSetState(0); // Would it be better to fill in a rasterizerState?
+
+		// Setup the raster description which will determine how and what polygons will be drawn.
+		D3D11_RASTERIZER_DESC rasterDesc;
+		rasterDesc.AntialiasedLineEnable = false;
+		//rasterDesc.CullMode = D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
+		rasterDesc.DepthBias = 0;
+		rasterDesc.DepthBiasClamp = 0.0f;
+		rasterDesc.DepthClipEnable = true;
+		rasterDesc.FillMode = D3D11_FILL_WIREFRAME; //D3D11_FILL_SOLID;
+		rasterDesc.FrontCounterClockwise = false;
+		rasterDesc.MultisampleEnable = false;
+		rasterDesc.ScissorEnable = false;
+		rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+		// Create the rasterizer state from the description we just filled out.
+		hr = m_pD3DDevice->CreateRasterizerState(&rasterDesc, &m_pRasterizerState);
+		D3DD11_SET_DEGUG_NAME(m_pRasterizerState,"m_pRasterizerState");
+		if(FAILED(hr))
+		{
+			return false;
+		}
+
+		// Now set the rasterizer state.
+		m_pImmediateContext->RSSetState(m_pRasterizerState);
 	}
 	return SUCCEEDED(hr);
 }
@@ -167,7 +192,7 @@ void Device_D3D::CleanUp()
 	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilBuffer);
 	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilView);
 	D3DD11_RELEASE_AND_CLEAN(m_pRenderTargetView);
-	//D3DD11_RELEASE_AND_CLEAN(m_pRasterizerState);
+	D3DD11_RELEASE_AND_CLEAN(m_pRasterizerState);
 	D3DD11_RELEASE_AND_CLEAN(m_pSwapChain);
 	D3DD11_RELEASE_AND_CLEAN(m_pImmediateContext);
 	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
@@ -196,6 +221,16 @@ ID3D11PixelShader* Device_D3D::GetPixelShader()
 void Device_D3D::ClearRenderTargetView(const float* clearColor)
 {
 	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView,clearColor);
+}
+
+void Device_D3D::ClearDepthStencilView()
+{
+	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView, D3D10_CLEAR_DEPTH|D3D10_CLEAR_STENCIL, 1.0f, 0);
+}
+
+void Device_D3D::SetDepthStencilState()
+{
+	m_pImmediateContext->OMSetDepthStencilState(0, 0);
 }
 
 void Device_D3D::PresentSwapChain()

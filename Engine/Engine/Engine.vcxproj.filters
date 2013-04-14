@@ -16,6 +16,12 @@
     <Filter Include="Engine Files\Helpers">
       <UniqueIdentifier>{ef61231a-c76b-4a9c-afd3-b59294632772}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Basic Geometry">
+      <UniqueIdentifier>{1ac6f629-4950-48cf-a2c9-bbbc4d762b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1509711c-e39f-44f7-9823-79f75dc2c257}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,6 +44,15 @@
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryMesh.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryTriangles.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Engine Files\Basic Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,5 +77,25 @@
     <ClInclude Include="ShaderManager.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeometryMesh.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryHelper.h">
+      <Filter>Engine Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Engine Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryTriangles.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Engine Files\Basic Geometry</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders.fx">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

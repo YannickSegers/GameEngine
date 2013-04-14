@@ -20,11 +20,13 @@ public:
 	virtual void CleanUp();
 
 	virtual Pi3DDevice* Get3DDevice();
-	ID3D11DeviceContext* GetImmediateContext();
+	Pi3DDeviceContext* GetImmediateContext();
 	ID3D11VertexShader* GetVertexShader();
 	ID3D11PixelShader* GetPixelShader();
 
 	virtual void ClearRenderTargetView(const float* clearColor);
+	virtual void ClearDepthStencilView();
+	virtual void SetDepthStencilState();
 	virtual void PresentSwapChain();
 private:
 	HWND m_hMainWnd;
@@ -39,7 +41,7 @@ private:
 	ID3D11RenderTargetView* m_pRenderTargetView;
 	ID3D11DepthStencilView* m_pDepthStencilView;
 
-	//ID3D11RasterizerState* m_pRasterizerState;
+	ID3D11RasterizerState* m_pRasterizerState;
 
 	ID3D11Buffer* m_pCBNeverChanges;
 	ID3D11Buffer* m_pCBChangeOnResize;

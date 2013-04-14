@@ -3,6 +3,7 @@
 
 #include <map>
 #include "Util.h"
+typedef map<tstring,ID3D11InputLayout*>::value_type StringInputLayoutPair;
 typedef map<tstring,ID3D11VertexShader*>::value_type StringVertexShaderPair;
 typedef map<tstring,ID3D11PixelShader*>::value_type StringPixelShaderPair;
 typedef map<tstring,ID3D11GeometryShader*>::value_type StringGeometryShaderPair;
@@ -18,11 +19,14 @@ public:
 
 	bool CompileShaderFromFile(const tstring& fileName, LPCSTR shaderName, LPCSTR shaderModel, ID3D10Blob** ppBlobOut);
 	bool GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderBlob, ID3D11InputLayout** pInputLayout);
+	//bool GenerateConstantBufferFromShader(ID3DBlob* pVertexShaderBlob);
 
+	void AddInputLayout(const tstring& inputLayoutName, ID3D11InputLayout* inputLayout);
 	void AddVertexShader(const tstring& vShaderName, ID3D11VertexShader* vertexShader);
 	void AddPixelShader(const tstring& pShaderName, ID3D11PixelShader* pixelShader);
 	void AddGeometryShader(const tstring& gShaderName, ID3D11GeometryShader* geometryShader);
 
+	ID3D11InputLayout* GetInputLayout(const tstring& inputLayoutName);
 	ID3D11VertexShader* GetVertexShader(const tstring& vShaderName);
 	ID3D11PixelShader* GetPixelShader(const tstring& pShaderName);
 	ID3D11GeometryShader* GetGeometryShader(const tstring& gShaderName);
@@ -31,6 +35,7 @@ public:
 	bool IsPixelShaderPresent(const tstring& pShaderName);
 	bool IsGeometryShaderPresent(const tstring& gShaderName);
 
+	void RemoveAllInputLayouts();
 	void RemoveAllVertexShaders();
 	void RemoveAllPixelShaders();
 	void RemoveAllGeometryShaders();

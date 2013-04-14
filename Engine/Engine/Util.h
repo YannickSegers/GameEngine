@@ -11,6 +11,7 @@ using namespace std;
 	#include <xnamath.h>
 	#include <cassert>
 	#include <string>
+	#include <tchar.h>
 
 #ifdef _UNICODE
 	#define tstring wstring
@@ -63,5 +64,6 @@ using namespace std;
 	typedef unsigned int PiUInt32;
 	typedef unsigned __int64 PiUInt64;
 	typedef ID3D11Device Pi3DDevice;
+	typedef ID3D11DeviceContext Pi3DDeviceContext;
 #endif
 #endif
