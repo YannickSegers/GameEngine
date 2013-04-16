@@ -184,10 +184,7 @@ bool Device_D3D::ResizeBuffers()
 void Device_D3D::CleanUp()
 {
 	m_pSwapChain->SetFullscreenState(FALSE, NULL);
-	/*D3DD11_RELEASE_AND_CLEAN(m_pVertexLayout);
-	D3DD11_RELEASE_AND_CLEAN(m_pPixelShader);
-	D3DD11_RELEASE_AND_CLEAN(m_pVertexShader);
-	D3DD11_RELEASE_AND_CLEAN(m_pCBNeverChanges);
+	/*D3DD11_RELEASE_AND_CLEAN(m_pCBNeverChanges);
 	D3DD11_RELEASE_AND_CLEAN(m_pCBChangeOnResize);*/
 	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilBuffer);
 	D3DD11_RELEASE_AND_CLEAN(m_pDepthStencilView);

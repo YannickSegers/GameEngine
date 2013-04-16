@@ -99,10 +99,14 @@ bool  Engine::InitShaders()
         return false;
     }
 	m_pShaderManager->AddVertexShader(_T("VertexShader"),vertexShader);
-	ID3D11InputLayout* inputLayout;
-	//m_pShaderManager->GenerateInputLayoutFromVertexShader(pVSBlob,&inputLayout);
-	
-
+	ID3D11InputLayout* inputLayout = 0;
+#if 1
+	if(!m_pShaderManager->GenerateInputLayoutFromVertexShader(pVSBlob,&inputLayout))
+	{
+		return false;
+	}
+#else
+	// Old input layout code
     // Define the input layout
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -113,6 +117,7 @@ bool  Engine::InitShaders()
     // Create the input layout
     hr =  m_pDevice->Get3DDevice()->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(),
                                           pVSBlob->GetBufferSize(), &inputLayout );
+#endif
 	D3DD11_SET_DEGUG_NAME(inputLayout,"m_pVertexLayout");
     pVSBlob->Release();
     if( FAILED( hr ) )

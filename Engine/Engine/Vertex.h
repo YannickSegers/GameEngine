@@ -5,8 +5,10 @@
 
 struct Vertex
 {
-	XMFLOAT3 m_Pos;
-	Vertex(float x, float y, float z): m_Pos(x,y,z)
+	// Made m_Pos an XMFLOAT4 instead of an XMFLOAT3, because of the automatic input layout reader
+	// this makes it compatible with the RGBA format
+	XMFLOAT4 m_Pos;
+	Vertex(float x, float y, float z): m_Pos(x,y,z,1)
 	{
 	}
 };
