@@ -1,36 +1,47 @@
 #include "GeometryMesh.h"
 #include "Engine.h"
-#include "Vertex.h"
-
 
 GeometryMesh::GeometryMesh()
 	:m_pGeometryTriangles(0)
+	//,m_pCBWorldViewProjection(0)
 {
 	//Initialize();
+	//m_pCBWorldViewProjection = new CBWorldViewProjection();
+	
 }
 
 GeometryMesh::~GeometryMesh()
 {
 	//D3DD11_DELETE_AND_CLEAN(m_pGeometryTriangles);
+	//D3DD11_DELETE_AND_CLEAN(m_pCBWorldViewProjection);
 }
 
 
 void GeometryMesh::Initialize()
 {
+	XMMATRIX identity = XMMatrixTranspose(XMMatrixIdentity());
+	XMStoreFloat4x4(&m_World,identity);
 	CreateGeometry();
 	InitializeBuffers();
 
 	// Initialize the projection matrix
-	XMMATRIX projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, ENGINE->GetDevice()->GetWidth() / (FLOAT)ENGINE->GetDevice()->GetHeight(), 0.01f, 100.0f );   
-    CBChangeOnResize cbChangesOnResize;
-    cbChangesOnResize.mProjection = XMMatrixTranspose( projection );
-    ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBChangeOnResize, 0, NULL, &cbChangesOnResize, 0, 0 );
+	//XMMATRIX projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, ENGINE->GetDevice()->GetWidth() / (FLOAT)ENGINE->GetDevice()->GetHeight(), 0.01f, 100.0f ); 
+	
+    /*CBChangeOnResize cbChangesOnResize;
+    cbChangesOnResize.mProjection = XMMatrixTranspose( projection );*/
+	/*CBWorldViewProjection cBWorldViewProjection;
+	cBWorldViewProjection.mProjection = XMMatrixTranspose( projection );*/
+    //ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBChangeOnResize, 0, NULL, &cbChangesOnResize, 0, 0 );
+	
 
 	 // Initialize the view matrix
-	XMMATRIX view = XMMatrixLookAtLH( EYEVECTOR, ATVECTOR, UPVECTOR );
-    CBNeverChanges cbNeverChanges;
-    cbNeverChanges.mView = XMMatrixTranspose( view );
-	ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0 );
+	//XMMATRIX view = XMMatrixLookAtLH( EYEVECTOR, ATVECTOR, UPVECTOR );
+    /*CBNeverChanges cbNeverChanges;
+    cbNeverChanges.mView = XMMatrixTranspose( view );*/
+	//cBWorldViewProjection.mView = XMMatrixTranspose( view );
+	//ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBNeverChanges, 0, NULL, &cbNeverChanges, 0, 0 );
+
+	//ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBWorldViewProjection, 0, NULL, &cBWorldViewProjection, 0, 0 );
 }
 
 void GeometryMesh::Update()
@@ -43,19 +54,32 @@ void GeometryMesh::Update()
 	world.m[3][2] = 0.0f; //zpos
 	world.m[3][3] = 1.0f;
 
-	CBChangesEveryFrame cb;
-	cb.mWorld = XMMatrixTranspose( world );
-	ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0 );
+	world = XMMatrixTranspose(world);
+	XMStoreFloat4x4(&m_World,world);
+	/*CBChangesEveryFrame cb;
+	cb.mWorld = XMMatrixTranspose( world );*/
+	
 }
 
 void GeometryMesh::Render()
 {
-	// Set View
-	ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 0, 1, &m_GeometryBuffers.m_pCBNeverChanges );
+	//// Set View
+	//ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 0, 1, &m_GeometryBuffers.m_pCBNeverChanges );
 
-	// Set Projection
-	ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 1, 1, &m_GeometryBuffers.m_pCBChangeOnResize );
+	//// Set Projection
+	//ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 1, 1, &m_GeometryBuffers.m_pCBChangeOnResize );
 
+	CBWorldViewProjection cBWorldViewProjection;
+	cBWorldViewProjection.mWorld = XMMatrixTranspose( XMLoadFloat4x4(&m_World));
+	XMMATRIX projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, ENGINE->GetDevice()->GetWidth() / (FLOAT)ENGINE->GetDevice()->GetHeight(), 0.01f, 100.0f ); 
+	cBWorldViewProjection.mProjection = XMMatrixTranspose( projection );
+	XMMATRIX view = XMMatrixLookAtLH( EYEVECTOR, ATVECTOR, UPVECTOR );
+	cBWorldViewProjection.mView = XMMatrixTranspose( view );
+	//ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0 );
+	ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBWorldViewProjection, 0, NULL, &cBWorldViewProjection, 0, 0 );
+
+	//set World, View, Projection
+	ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 0, 1, &m_GeometryBuffers.m_pCBWorldViewProjection);
 	// Set inputlayout
 	ENGINE->GetDevice()->GetImmediateContext()->IASetInputLayout(ENGINE->GetShaderManager()->GetInputLayout(_T("InputLayout")) );
 	// Set vertex buffer
@@ -72,10 +96,11 @@ void GeometryMesh::Render()
 
 	ENGINE->GetDevice()->GetImmediateContext()->VSSetShader( ENGINE->GetShaderManager()->GetVertexShader(_T("VertexShader")), NULL, 0 );
 
-	ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 2, 1, &m_GeometryBuffers.m_pCBChangesEveryFrame );
+	//ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 2, 1, &m_GeometryBuffers.m_pCBChangesEveryFrame );
 
 	ENGINE->GetDevice()->GetImmediateContext()->PSSetShader( ENGINE->GetShaderManager()->GetPixelShader(_T("PixelShader")), NULL, 0 );
-	ENGINE->GetDevice()->GetImmediateContext()->PSSetConstantBuffers( 2, 1, &m_GeometryBuffers.m_pCBChangesEveryFrame );
+	//ENGINE->GetDevice()->GetImmediateContext()->PSSetConstantBuffers( 2, 1, &m_GeometryBuffers.m_pCBChangesEveryFrame );
+	ENGINE->GetDevice()->GetImmediateContext()->PSSetConstantBuffers( 0, 1, &m_GeometryBuffers.m_pCBWorldViewProjection);
 
 	ENGINE->GetDevice()->GetImmediateContext()->DrawIndexed( m_GeometryBuffers.m_NumIndices, 0, 0 );
 
@@ -105,7 +130,7 @@ void GeometryMesh::InitializeBuffers()
 	ZeroMemory( &InitData, sizeof(InitData) );
 	InitData.pSysMem = m_pGeometryTriangles->GetVertices().data();
 	hr = ENGINE->GetDevice()->Get3DDevice()->CreateBuffer( &bd, &InitData, &m_GeometryBuffers.m_pVertexBuffer);
-	D3DD11_SET_DEGUG_NAME(m_GeometryBuffers.m_pVertexBuffer,"m_pGeometryVertexBuffer");
+	D3DD11_SET_DEGUG_NAME(m_GeometryBuffers.m_pVertexBuffer,"m_pVertexBuffer");
 	if( FAILED( hr ) )
 	{
 		assert("error setting up Vertex buffer");
@@ -125,7 +150,7 @@ void GeometryMesh::InitializeBuffers()
 	ZeroMemory( &InitIndexData, sizeof(InitIndexData) );
 	InitIndexData.pSysMem = m_pGeometryTriangles->GetIndices().data();
 	hr = ENGINE->GetDevice()->Get3DDevice()->CreateBuffer( &bdIndices, &InitIndexData, &m_GeometryBuffers.m_pIndexBuffer);
-	D3DD11_SET_DEGUG_NAME(m_GeometryBuffers.m_pIndexBuffer,"m_pCubeIndexBuffer");
+	D3DD11_SET_DEGUG_NAME(m_GeometryBuffers.m_pIndexBuffer,"m_pIndexBuffer");
 	if( FAILED( hr ) )
 	{
 		assert("error setting up Indexbuffer");
@@ -134,6 +159,8 @@ void GeometryMesh::InitializeBuffers()
 	////
 	// Create Constant buffers
 	///
+
+#if 0
 	//Changes Every Frame
 
     ZeroMemory( &bd, sizeof(bd) );
@@ -173,4 +200,19 @@ void GeometryMesh::InitializeBuffers()
 	{
 		assert("error setting up buffer");
 	}
+#else
+	 ZeroMemory( &bd, sizeof(bd) );
+    // Create the constant buffers
+    // initialize memory on target for the specific rendering infos
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(CBWorldViewProjection);
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags = 0;
+	hr = ENGINE->GetDevice()->Get3DDevice()->CreateBuffer( &bd, NULL, &m_GeometryBuffers.m_pCBWorldViewProjection );
+	D3DD11_SET_DEGUG_NAME(m_GeometryBuffers.m_pCBWorldViewProjection,"m_pAppElementCBWorldViewProjection");
+	if( FAILED( hr ) )
+	{
+		assert("error setting up buffer");
+	}
+#endif
 }

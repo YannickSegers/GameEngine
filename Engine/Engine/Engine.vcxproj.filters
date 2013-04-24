@@ -97,5 +97,8 @@
     <None Include="shaders.fx">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\BasicShader.fx">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

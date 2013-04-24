@@ -2,6 +2,9 @@
 #define __GeometryMesh_H_
 #include "GeometryHelper.h"
 #include "GeometryTriangles.h"
+//struct Vertex;
+//struct CBWorldViewProjection;
+#include "Vertex.h"
 
 const XMVECTOR EYEVECTOR = XMVectorSet( 0.0f, 2.f, -5.0f, 0.0f );
 const XMVECTOR ATVECTOR = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -25,6 +28,7 @@ protected:
 	//-----------------
 	GeometryTriangles* m_pGeometryTriangles;
 	GeometryBuffers m_GeometryBuffers;
+	XMFLOAT4X4 m_World;
 };
 
 #endif

@@ -81,7 +81,8 @@ bool  Engine::InitShaders()
 	HRESULT hr = S_OK;
 	// Compile the vertex shader
     ID3DBlob* pVSBlob = NULL;
-	hr = m_pShaderManager->CompileShaderFromFile( L"shaders.fx", "VS", "vs_4_0", &pVSBlob );
+	//hr = m_pShaderManager->CompileShaderFromFile( L"shaders.fx", "VS", "vs_4_0", &pVSBlob );
+	hr = m_pShaderManager->CompileShaderFromFile( L"Shaders/BasicShader.fx", "VS", "vs_4_0", &pVSBlob );
     if( FAILED( hr ) )
     {
         MessageBox( NULL,
@@ -127,7 +128,8 @@ bool  Engine::InitShaders()
 
     // Compile the pixel shader
     ID3DBlob* pPSBlob = NULL;
-    hr = m_pShaderManager->CompileShaderFromFile( L"shaders.fx", "PS", "ps_4_0", &pPSBlob );
+    //hr = m_pShaderManager->CompileShaderFromFile( L"shaders.fx", "PS", "ps_4_0", &pPSBlob );
+	hr = m_pShaderManager->CompileShaderFromFile( L"Shaders/BasicShader.fx", "PS", "ps_4_0", &pPSBlob );
     if( FAILED( hr ) )
     {
         MessageBox( NULL,

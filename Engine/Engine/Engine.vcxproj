@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders.fx" />
+    <None Include="Shaders\BasicShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

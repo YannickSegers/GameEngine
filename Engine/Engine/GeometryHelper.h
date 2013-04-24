@@ -11,17 +11,19 @@ struct GeometryBuffers
 	ID3D11Buffer* m_pVertexBuffer;
 	ID3D11Buffer* m_pIndexBuffer;
 	UINT m_NumIndices;
-	ID3D11Buffer* m_pCBChangesEveryFrame;
+	/*ID3D11Buffer* m_pCBChangesEveryFrame;
 	ID3D11Buffer* m_pCBNeverChanges;
-	ID3D11Buffer* m_pCBChangeOnResize;
+	ID3D11Buffer* m_pCBChangeOnResize;*/
+	ID3D11Buffer* m_pCBWorldViewProjection;
 
 	GeometryBuffers()
 		:m_pVertexBuffer(0)
 		,m_pIndexBuffer(0)
 		,m_NumIndices(0)
-		,m_pCBChangesEveryFrame(0)
+		/*,m_pCBChangesEveryFrame(0)
 		,m_pCBNeverChanges(0)
-		,m_pCBChangeOnResize(0)
+		,m_pCBChangeOnResize(0)*/
+		,m_pCBWorldViewProjection(0)
 	{
 
 	}
@@ -30,9 +32,10 @@ struct GeometryBuffers
 	{
 		 D3DD11_RELEASE_AND_CLEAN(m_pVertexBuffer);
 		 D3DD11_RELEASE_AND_CLEAN(m_pIndexBuffer);
-		 D3DD11_RELEASE_AND_CLEAN(m_pCBChangesEveryFrame);
+		/* D3DD11_RELEASE_AND_CLEAN(m_pCBChangesEveryFrame);
 		 D3DD11_RELEASE_AND_CLEAN(m_pCBNeverChanges);
-		 D3DD11_RELEASE_AND_CLEAN(m_pCBChangeOnResize);
+		 D3DD11_RELEASE_AND_CLEAN(m_pCBChangeOnResize);*/
+		 D3DD11_RELEASE_AND_CLEAN(m_pCBWorldViewProjection);
 	}
 };
 

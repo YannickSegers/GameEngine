@@ -25,18 +25,24 @@ struct VertexPosTex : Vertex
 };
 
 // ConstantBuffer Structs
-struct CBNeverChanges
-{
-	XMMATRIX mView;
-};
-
-struct CBChangeOnResize
-{
-	XMMATRIX mProjection;
-};
-
-struct CBChangesEveryFrame
+//struct CBNeverChanges
+//{
+//	XMMATRIX mView;
+//};
+//
+//struct CBChangeOnResize
+//{
+//	XMMATRIX mProjection;
+//};
+//
+//struct CBChangesEveryFrame
+//{
+//	XMMATRIX mWorld;
+//};
+struct CBWorldViewProjection
 {
 	XMMATRIX mWorld;
+	XMMATRIX mView;
+	XMMATRIX mProjection;
 };
 #endif
