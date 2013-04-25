@@ -5,10 +5,8 @@
 //struct Vertex;
 //struct CBWorldViewProjection;
 #include "Vertex.h"
+class RenderData;
 
-const XMVECTOR EYEVECTOR = XMVectorSet( 0.0f, 2.f, -5.0f, 0.0f );
-const XMVECTOR ATVECTOR = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
-const XMVECTOR UPVECTOR = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
 class GeometryMesh
 {
 public:
@@ -17,7 +15,7 @@ public:
 	
 	void Initialize();
 	virtual void Update();
-	virtual void Render();
+	virtual void Render(const RenderData* pRenderData);
 
 protected:
 

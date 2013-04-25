@@ -1,5 +1,8 @@
 #include "GeometryMesh.h"
 #include "Engine.h"
+#include "RenderData.h"
+#include "Camera.h"
+
 
 GeometryMesh::GeometryMesh()
 	:m_pGeometryTriangles(0)
@@ -47,7 +50,7 @@ void GeometryMesh::Initialize()
 void GeometryMesh::Update()
 {
 	//Calculate World Matrix
-	XMMATRIX world = XMMatrixRotationRollPitchYaw( 0.0f, 2.0f, 0.0f ); //pitch, yaw, roll
+	XMMATRIX world = XMMatrixRotationRollPitchYaw( 0.0f, 0.0f, 0.0f ); //pitch, yaw, roll
 
 	world.m[3][0] = 0.0f; //xpos
 	world.m[3][1] = 0.0f; //ypos
@@ -61,7 +64,7 @@ void GeometryMesh::Update()
 	
 }
 
-void GeometryMesh::Render()
+void GeometryMesh::Render(const RenderData* pRenderData)
 {
 	//// Set View
 	//ENGINE->GetDevice()->GetImmediateContext()->VSSetConstantBuffers( 0, 1, &m_GeometryBuffers.m_pCBNeverChanges );
@@ -71,10 +74,13 @@ void GeometryMesh::Render()
 
 	CBWorldViewProjection cBWorldViewProjection;
 	cBWorldViewProjection.mWorld = XMMatrixTranspose( XMLoadFloat4x4(&m_World));
-	XMMATRIX projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, ENGINE->GetDevice()->GetWidth() / (FLOAT)ENGINE->GetDevice()->GetHeight(), 0.01f, 100.0f ); 
-	cBWorldViewProjection.mProjection = XMMatrixTranspose( projection );
-	XMMATRIX view = XMMatrixLookAtLH( EYEVECTOR, ATVECTOR, UPVECTOR );
-	cBWorldViewProjection.mView = XMMatrixTranspose( view );
+	//XMMATRIX projection = XMMatrixPerspectiveFovLH( XM_PIDIV4, ENGINE->GetDevice()->GetWidth() / (FLOAT)ENGINE->GetDevice()->GetHeight(), 0.01f, 100.0f ); 
+	XMFLOAT4X4 projection =  pRenderData->GetCamera()->GetProjection();
+	cBWorldViewProjection.mProjection = XMMatrixTranspose(XMLoadFloat4x4(&projection));
+	
+	//XMMATRIX view = XMMatrixLookAtLH( EYEVECTOR, ATVECTOR, UPVECTOR );
+	XMFLOAT4X4 view =  pRenderData->GetCamera()->GetView();
+	cBWorldViewProjection.mView = XMMatrixTranspose(XMLoadFloat4x4(&view));
 	//ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBChangesEveryFrame, 0, NULL, &cb, 0, 0 );
 	ENGINE->GetDevice()->GetImmediateContext()->UpdateSubresource( m_GeometryBuffers.m_pCBWorldViewProjection, 0, NULL, &cBWorldViewProjection, 0, 0 );
 
