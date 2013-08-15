@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Device_D3D.h"
+#include "InputManager.h"
 //Initialize statics
 Engine* Engine::s_pEngine = NULL;
 
@@ -12,10 +13,12 @@ Engine::Engine()
 	m_pDevice = new Device_D3D(WINDOWWIDTH,WINDOWHEIGHT);
 #endif
 	m_pShaderManager = new ShaderManager();
+	m_pInputManager = new InputManager();
 }
 
 Engine::~Engine()
 {
+	delete m_pInputManager;
 	delete m_pShaderManager;
 	delete m_pDevice;
 	delete m_pGame;
@@ -60,6 +63,7 @@ bool Engine::Run()
 		}
 		else
 		{
+			m_pInputManager->Update();
 			m_pGame->Update();
 			m_pGame->Render();
 		}
@@ -161,6 +165,11 @@ Device* Engine::GetDevice()
 ShaderManager* Engine::GetShaderManager()
 {
 	return m_pShaderManager;
+}
+
+InputManager* Engine::GetInputManager()
+{
+	return m_pInputManager;
 }
 
 #ifdef WIN32

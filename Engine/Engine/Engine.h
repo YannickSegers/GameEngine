@@ -6,6 +6,7 @@
 #include "AbstractGame.h"
 #include "Device.h"
 #include "ShaderManager.h"
+class InputManager;
 
 // Magic numbers
 const int WINDOWWIDTH = 640;
@@ -43,6 +44,7 @@ public:
 	bool InitShaders();
 	Device* GetDevice();
 	ShaderManager* GetShaderManager();
+	InputManager* GetInputManager();
 
 private:
 	//-----------------
@@ -55,6 +57,7 @@ private:
 	AbstractGame* m_pGame;
 	Device* m_pDevice;
 	ShaderManager* m_pShaderManager;
+	InputManager* m_pInputManager;
 
 };
 #endif

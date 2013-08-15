@@ -60,6 +60,9 @@
     <ClCompile Include="RenderData.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -102,6 +105,9 @@
       <Filter>Engine Files</Filter>
     </ClInclude>
     <ClInclude Include="RenderData.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>

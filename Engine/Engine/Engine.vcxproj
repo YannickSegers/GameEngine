@@ -55,7 +55,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -87,6 +87,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GeometryMesh.cpp" />
     <ClCompile Include="GeometryTriangles.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderData.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="GeometryHelper.h" />
     <ClInclude Include="GeometryMesh.h" />
     <ClInclude Include="GeometryTriangles.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="RenderData.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Util.h" />
