@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Device_D3D.h"
 #include "InputManager.h"
+
 //Initialize statics
 Engine* Engine::s_pEngine = NULL;
 
@@ -53,6 +54,8 @@ bool Engine::Run()
 #ifdef WIN32
 	// Enter the main message loop
 	MSG msg = {0};
+
+	m_GameTimer.Reset();
 	while ( WM_QUIT != msg.message )
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -63,6 +66,7 @@ bool Engine::Run()
 		}
 		else
 		{
+			m_GameTimer.Tick();
 			m_pInputManager->Update();
 			m_pGame->Update();
 			m_pGame->Render();
@@ -170,6 +174,11 @@ ShaderManager* Engine::GetShaderManager()
 InputManager* Engine::GetInputManager()
 {
 	return m_pInputManager;
+}
+
+GameTimer* Engine::GetGameTimer()
+{
+	return &m_GameTimer;
 }
 
 #ifdef WIN32

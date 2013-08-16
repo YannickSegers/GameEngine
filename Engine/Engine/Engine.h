@@ -6,6 +6,7 @@
 #include "AbstractGame.h"
 #include "Device.h"
 #include "ShaderManager.h"
+#include "GameTimer.h"
 class InputManager;
 
 // Magic numbers
@@ -45,6 +46,7 @@ public:
 	Device* GetDevice();
 	ShaderManager* GetShaderManager();
 	InputManager* GetInputManager();
+	GameTimer* GetGameTimer();
 
 private:
 	//-----------------
@@ -58,6 +60,7 @@ private:
 	Device* m_pDevice;
 	ShaderManager* m_pShaderManager;
 	InputManager* m_pInputManager;
+	GameTimer m_GameTimer;
 
 };
 #endif

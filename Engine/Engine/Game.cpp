@@ -68,27 +68,27 @@ void Game::Update()
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x57))//W
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0,0.01));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0,0.01f));
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x53))//S
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0,-0.01));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0,-0.01f));
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x41))//A
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(-0.01,0,0));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(-0.01f,0,0));
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x44))//D
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0.01,0,0));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0.01f,0,0));
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x51))//Q
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,-0.01,0));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,-0.01f,0));
 	}
 	if(ENGINE->GetInputManager()->IsKeyDown(0x45))//E
 	{
-		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0.01,0));
+		cameraPos = XMVector3Transform(cameraPos,XMMatrixTranslation(0,0.01f,0));
 	}
 	
 	XMStoreFloat3(&newCameraPos,cameraPos);
