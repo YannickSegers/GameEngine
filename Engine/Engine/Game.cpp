@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "InputManager.h"
+#include "Util.h"
 
 #define ENGINE (Engine::GetSingleton())
 
@@ -22,6 +23,11 @@ Game::~Game()
 
 void Game::InitializeElements()
 {
+	//Input 
+	vector<int> rightCommands;
+	rightCommands.push_back(VK_RIGHT);
+	rightCommands.push_back(0x4C);
+	ENGINE->GetInputManager()->RegisterCommand(L"RIGHT",&rightCommands);
 	m_pCube = new Cube();
 	m_pCube->Initialize();
 
@@ -62,7 +68,8 @@ void Game::Update()
 	{
 		cameraPos = XMVector3Rotate(cameraPos,XMQuaternionRotationMatrix(XMMatrixRotationY((XM_PIDIV2/9000.0f))));
 	}
-	if(ENGINE->GetInputManager()->IsKeyDown(VK_RIGHT))
+	//if(ENGINE->GetInputManager()->IsKeyDown(VK_RIGHT))
+	if(ENGINE->GetInputManager()->IsCommandDown(L"RIGHT"))
 	{
 		cameraPos = XMVector3Rotate(cameraPos,XMQuaternionRotationMatrix(XMMatrixRotationY(-(XM_PIDIV2/9000.0f))));
 	}
