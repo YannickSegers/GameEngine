@@ -119,7 +119,6 @@ bool ShaderManager::GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderB
         inputLayoutDesc.push_back(elementDesc);
     }       
  
-	//ENGINE->GetDevice()->g;
     // Try to create Input Layout
 	hr = ENGINE->GetDevice()->Get3DDevice()->CreateInputLayout( &inputLayoutDesc[0], inputLayoutDesc.size(), pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), pInputLayout );
  

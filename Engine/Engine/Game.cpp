@@ -26,7 +26,7 @@ void Game::InitializeElements()
 	//Input 
 	vector<int> rightCommands;
 	rightCommands.push_back(VK_RIGHT);
-	rightCommands.push_back(0x4C);
+	rightCommands.push_back(0x4C); //L
 	ENGINE->GetInputManager()->RegisterCommand(L"RIGHT",&rightCommands);
 	m_pCube = new Cube();
 	m_pCube->Initialize();

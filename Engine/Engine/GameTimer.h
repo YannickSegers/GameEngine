@@ -10,8 +10,8 @@ class GameTimer
 public:
 	GameTimer();
 
-	float GetGameTime()const; // in seconds
-	float GetDeltaTime()const; // in seconds
+	float GetGameTime() const; // in seconds
+	float GetDeltaTime() const; // in seconds
 
 	void Reset(); // Call before message loop.
 	void Start(); // Call when unpaused.

@@ -31,7 +31,7 @@ float GameTimer::GetGameTime()const
 	}
 
 	// The distnace m_CurrTimer - m_BaseTime includes paused timer
-	// which we do not want to count. To correct thism we can subtract
+	// which we do not want to count. To correct this we can subtract
 	// the paused time from m_CurrTime
 
 	else 

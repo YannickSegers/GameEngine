@@ -30,12 +30,12 @@ Vertex* GeometryTriangles::GetVertexAtIndex( int index )
 	return &m_Vertices.at(index);
 }
 
-const vector<Vertex>& GeometryTriangles::GetVertices()
+const vector<Vertex>& GeometryTriangles::GetVertices() const
 {
 	return m_Vertices;
 }
 
-const vector<int>& GeometryTriangles::GetIndices()
+const vector<int>& GeometryTriangles::GetIndices() const
 {
 	return m_Indices;
 }

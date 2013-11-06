@@ -32,17 +32,17 @@ XMFLOAT4X4 Camera::GetView() const
 	return m_View;
 }
 
-XMFLOAT3 Camera::GetCameraPos()
+XMFLOAT3 Camera::GetCameraPos() const
 {
 	return m_CameraPos;
 }
 
-XMFLOAT3 Camera::GetTargetPos()
+XMFLOAT3 Camera::GetTargetPos() const
 {
 	return m_TargetPos;
 }
 
-XMFLOAT3 Camera::GetUpVector()
+XMFLOAT3 Camera::GetUpVector() const
 {
 	return m_UpVector;
 }

@@ -22,6 +22,7 @@ class Engine
 private:
 	// private constructor for the singleton implementations
 	Engine();
+
 	//static pointer for singleton
 	static Engine* s_pEngine;
 
@@ -43,10 +44,10 @@ public:
 
 	void SetGame(AbstractGame* game);
 	bool InitShaders();
-	Device* GetDevice();
-	ShaderManager* GetShaderManager();
-	InputManager* GetInputManager();
-	GameTimer* GetGameTimer();
+	Device* GetDevice() const;
+	ShaderManager* GetShaderManager() const;
+	InputManager* GetInputManager() const;
+	const GameTimer& GetGameTimer() const;
 
 private:
 	//-----------------

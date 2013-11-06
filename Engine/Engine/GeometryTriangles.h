@@ -14,8 +14,8 @@ public:
 	void AddTriangle( int index0, int index1, int index2 );
 	int AddVertex(Vertex vertex);
 	Vertex* GetVertexAtIndex( int index );
-	const vector<Vertex>& GetVertices();
-	const vector<int>& GetIndices();
+	const vector<Vertex>& GetVertices() const;
+	const vector<int>& GetIndices() const;
 
 private:
 	vector<Vertex>	m_Vertices;

@@ -19,10 +19,10 @@ public:
 	virtual bool ResizeBuffers();
 	virtual void CleanUp();
 
-	virtual Pi3DDevice* Get3DDevice();
-	Pi3DDeviceContext* GetImmediateContext();
-	ID3D11VertexShader* GetVertexShader();
-	ID3D11PixelShader* GetPixelShader();
+	virtual Pi3DDevice* Get3DDevice() const;
+	Pi3DDeviceContext* GetImmediateContext() const;
+	ID3D11VertexShader* GetVertexShader() const;
+	ID3D11PixelShader* GetPixelShader() const;
 
 	virtual void ClearRenderTargetView(const float* clearColor);
 	virtual void ClearDepthStencilView();

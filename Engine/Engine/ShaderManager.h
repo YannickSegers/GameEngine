@@ -19,7 +19,6 @@ public:
 
 	bool CompileShaderFromFile(const tstring& fileName, LPCSTR shaderName, LPCSTR shaderModel, ID3D10Blob** ppBlobOut);
 	bool GenerateInputLayoutFromVertexShader(ID3DBlob* pVertexShaderBlob, ID3D11InputLayout** pInputLayout);
-	//bool GenerateConstantBufferFromShader(ID3DBlob* pVertexShaderBlob);
 
 	void AddInputLayout(const tstring& inputLayoutName, ID3D11InputLayout* inputLayout);
 	void AddVertexShader(const tstring& vShaderName, ID3D11VertexShader* vertexShader);

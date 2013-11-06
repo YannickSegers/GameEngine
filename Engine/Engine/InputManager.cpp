@@ -18,21 +18,21 @@ void InputManager::Update()
 	GetKeyboardState(m_CurrentKeyboardState);
 }
 
-bool InputManager::IsKeyDown(int vKey)
+bool InputManager::IsKeyDown(int vKey) const
 {
 	unsigned char highBit = m_CurrentKeyboardState[vKey] & 0x80;
 	if(highBit) return true;
  	return false;
 }
 
-bool InputManager::IsKeyUp(int vKey)
+bool InputManager::IsKeyUp(int vKey) const
 {
 	unsigned char highBit = m_CurrentKeyboardState[vKey] & 0x80;
 	if(!highBit) return true;
 	return false;
 }
 
-bool InputManager::IsKeyHeldDown(int vKey)
+bool InputManager::IsKeyHeldDown(int vKey) const
 {
 	if( (m_PreviousKeyboardState[vKey] & 0x80) && (m_CurrentKeyboardState[vKey] & 0x80)) return true;
 	return false;
@@ -54,9 +54,9 @@ void InputManager::RemoveCommand(const tstring& commandName)
 	}
 }
 
-bool InputManager::IsCommandDown(const tstring& commandName)
+bool InputManager::IsCommandDown(const tstring& commandName) const
 {
-	map<tstring,vector<int> >::iterator pos = m_RegisteredCommands.find(commandName);
+	map<tstring,vector<int> >::const_iterator pos = m_RegisteredCommands.find(commandName);
 	if(pos != m_RegisteredCommands.end())
 	{
 		BOOST_FOREACH(int commandKey, pos->second)
@@ -70,9 +70,9 @@ bool InputManager::IsCommandDown(const tstring& commandName)
 	return false;
 }
 
-bool InputManager::IsCommandUp(const tstring& commandName)
+bool InputManager::IsCommandUp(const tstring& commandName) const
 {
-	map<tstring,vector<int> >::iterator pos = m_RegisteredCommands.find(commandName);
+	map<tstring,vector<int> >::const_iterator pos = m_RegisteredCommands.find(commandName);
 	if(pos != m_RegisteredCommands.end())
 	{
 		BOOST_FOREACH(int commandKey, pos->second)
@@ -86,9 +86,9 @@ bool InputManager::IsCommandUp(const tstring& commandName)
 	return false;
 }
 
-bool InputManager::IsCommandHeldDown(const tstring& commandName)
+bool InputManager::IsCommandHeldDown(const tstring& commandName) const
 {
-	map<tstring,vector<int> >::iterator pos = m_RegisteredCommands.find(commandName);
+	map<tstring,vector<int> >::const_iterator pos = m_RegisteredCommands.find(commandName);
 	if(pos != m_RegisteredCommands.end())
 	{
 		BOOST_FOREACH(int commandKey, pos->second)

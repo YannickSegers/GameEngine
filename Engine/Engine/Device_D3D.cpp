@@ -195,22 +195,22 @@ void Device_D3D::CleanUp()
 	D3DD11_RELEASE_AND_CLEAN(m_pD3DDevice);
 }
 
-Pi3DDevice* Device_D3D::Get3DDevice()
+Pi3DDevice* Device_D3D::Get3DDevice() const
 {
 	return m_pD3DDevice;
 }
 
-ID3D11DeviceContext* Device_D3D::GetImmediateContext()
+ID3D11DeviceContext* Device_D3D::GetImmediateContext() const
 {
 	return m_pImmediateContext;
 }
 
-ID3D11VertexShader* Device_D3D::GetVertexShader()
+ID3D11VertexShader* Device_D3D::GetVertexShader() const
 {
 	return m_pVertexShader;
 }
 
-ID3D11PixelShader* Device_D3D::GetPixelShader()
+ID3D11PixelShader* Device_D3D::GetPixelShader() const
 {
 	return m_pPixelShader;
 }

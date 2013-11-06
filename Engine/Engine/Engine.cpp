@@ -161,24 +161,24 @@ void Engine::SetGame(AbstractGame* game)
 	m_pGame = game;
 }
 
-Device* Engine::GetDevice()
+Device* Engine::GetDevice() const
 {
 	return m_pDevice;
 }
 
-ShaderManager* Engine::GetShaderManager()
+ShaderManager* Engine::GetShaderManager() const
 {
 	return m_pShaderManager;
 }
 
-InputManager* Engine::GetInputManager()
+InputManager* Engine::GetInputManager() const
 {
 	return m_pInputManager;
 }
 
-GameTimer* Engine::GetGameTimer()
+const GameTimer& Engine::GetGameTimer() const
 {
-	return &m_GameTimer;
+	return m_GameTimer;
 }
 
 #ifdef WIN32

@@ -14,15 +14,15 @@ public:
 	virtual ~InputManager();
 
 	void Update();
-	bool IsKeyDown(int vKey);
-	bool IsKeyUp(int vKey);
-	bool IsKeyHeldDown(int vKey);
+	bool IsKeyDown(int vKey) const;
+	bool IsKeyUp(int vKey) const;
+	bool IsKeyHeldDown(int vKey) const;
 
 	void RegisterCommand(const tstring& commandName, const vector<int>* keys);
 	void RemoveCommand(const tstring& commandName);
-	bool IsCommandDown(const tstring& commandName);
-	bool IsCommandUp(const tstring& commandName);
-	bool IsCommandHeldDown(const tstring& commandName);
+	bool IsCommandDown(const tstring& commandName) const;
+	bool IsCommandUp(const tstring& commandName) const;
+	bool IsCommandHeldDown(const tstring& commandName) const;
 
 private:
 	unsigned char m_CurrentKeyboardState[256];

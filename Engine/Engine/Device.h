@@ -17,8 +17,8 @@ public:
 
 	void SetWidth(int width);
 	void SetHeight(int height);
-	int GetWidth();
-	int GetHeight();
+	int GetWidth() const;
+	int GetHeight() const;
 	virtual void CleanUp() = 0;
 
 	virtual void ClearRenderTargetView(const float* clearColor) = 0;
@@ -26,8 +26,8 @@ public:
 	virtual void SetDepthStencilState() = 0;
 	virtual void PresentSwapChain() = 0;
 
-	virtual Pi3DDevice* Get3DDevice() = 0;
-	virtual Pi3DDeviceContext* GetImmediateContext() = 0;
+	virtual Pi3DDevice* Get3DDevice() const = 0;
+	virtual Pi3DDeviceContext* GetImmediateContext() const = 0;
 protected:
 	int m_Width;
 	int m_Height;

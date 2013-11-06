@@ -13,9 +13,9 @@ public:
 	XMFLOAT4X4 GetProjection() const;
 	XMFLOAT4X4 GetView() const;	  
 
-	XMFLOAT3 GetCameraPos();
-	XMFLOAT3 GetTargetPos();
-	XMFLOAT3 GetUpVector();
+	XMFLOAT3 GetCameraPos() const;
+	XMFLOAT3 GetTargetPos() const;
+	XMFLOAT3 GetUpVector() const;
 
 	void SetProjection(XMFLOAT4X4 projection);
 	void SetView(XMFLOAT4X4 view);	   

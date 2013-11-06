@@ -17,12 +17,12 @@ void Device::SetHeight(int height)
 	m_Height = height;
 }
 
-int Device::GetWidth()
+int Device::GetWidth() const
 {
 	return m_Width;
 }
 
-int Device::GetHeight()
+int Device::GetHeight() const
 {
 	return m_Height;
 }
